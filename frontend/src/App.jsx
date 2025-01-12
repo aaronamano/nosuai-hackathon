@@ -1,19 +1,38 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import TodoList from './components/TodoList'
-'use client'
 
 function App() {
-  const [ tasks, setTasks ] = useState([])
+  const [ tasks, setTasks ] = useState(() => {
+    /* makes sure that the tasks persist after refresh */
+    const storedTasks = localStorage.getItem('tasks')
+    return storedTasks ? JSON.parse(storedTasks) : []
+  })
+
   const [ newTask, setNewTask ] = useState('')
+  const [ newDeadline, setNewDeadline ] = useState('')
   const [ aiText, setAiText ] = useState('Output of AI text')
+
+  /* saves tasks to local storage */
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+  }, [ tasks ])
 
   const addTask = () => {
     if (newTask.trim() !== '') {
-      setTasks([ ...tasks, { id: Date.now(), text: newTask, completed: false } ])
-      setNewTask('')
+      setTasks(prevTasks => [
+        ...prevTasks,
+        {
+          id: Date.now(),
+          text: newTask,
+          completed: false,
+          deadline: newDeadline
+        }
+      ]);
+      setNewTask('');
+      setNewDeadline('');
     }
-  }
+  };
 
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id))
@@ -23,12 +42,18 @@ function App() {
 
   }
 
-  const checkOffTask = () => {
+  const checkOffTask = (id) => {
     setTasks(tasks.map(task =>
       task.id === id ? { ...task, completed: !task.completed } : task
     ))
 
   }
+
+  const editDeadline = (id, newDeadline) => {
+    setTasks(prevTasks => prevTasks.map(task =>
+      task.id === id ? { ...task, deadline: newDeadline } : task
+    ));
+  };
 
   return (
     <>
@@ -39,7 +64,7 @@ function App() {
           {/* Displays the todo list */}
           <div className="w-1/2 p-6 overflow-auto">
             <h1 className="text-2xl font-bold mb-4">Prioritize Higher</h1>
-            <TodoList tasks={tasks} onDelete={deleteTask} onToggle={checkOffTask} />
+            <TodoList tasks={tasks} onDelete={deleteTask} onToggle={checkOffTask} onEdit={editDeadline}/>
           </div>
 
           {/* Displays the AI's text output */}
@@ -58,8 +83,14 @@ function App() {
               placeholder="Enter a task"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
-              onClick={(e) => e.key === 'Enter' && addTask()}
               className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <input
+              type="date"
+              value={newDeadline}
+              onChange={(e) => setNewDeadline(e.target.value)}
+              className="border border-gray-500 rounded-md px-4 py-2"
             />
 
             {/* Add Button */}
