@@ -1,12 +1,13 @@
 
 Frontend objectives: <br>
--work on the frontend using React <br>
--create and add a task <br>
--delete a task <br>
+-work on the frontend using React ✅<br>
+-create and add a task ✅<br>
+-delete a task ✅<br>
+-toggle a task aka checking it off <br> 
 -make sure that the tasks persist after the page refreshes <br>
--program a 'priortize' button <br>
--program a display where the AI model can generate the prioritized tasks <br>
--program a display showing the list of tasks the user inputs <br>
+-program a 'priortize' button ✅<br>
+-program a display where the AI model can generate the prioritized tasks ✅<br>
+-program a display showing the list of tasks the user inputs ✅<br>
 
 Backend objectives: <br>
 -use a framework like Node/Express or Flask to connect the server to the client <br>
