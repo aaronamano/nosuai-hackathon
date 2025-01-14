@@ -1,28 +1,45 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import CORS
 import os
-#from openai import OpenAI
+from dotenv import load_dotenv
+from openai import OpenAI
 
-# Set up the Nebius AI client
-client = OpenAI(
-    base_url="https://api.studio.nebius.ai/v1/",
-    api_key=os.environ.get("NEBIUS_API_KEY"),
-)
+# Load environment variables
+load_dotenv()
 
-# Define the task prioritization prompt
-completion = client.chat.completions.create(
-    model="meta-llama/Meta-Llama-3.1-70B-Instruct",
-    messages=[
-        {
-            "role": "user",
-            "content": "I have the following tasks: \n"
-                       "1. Submit the quarterly report (due in 2 days).\n"
-                       "2. Schedule a team meeting (no deadline).\n"
-                       "3. Review the new project proposal (due tomorrow).\n"
-                       "4. Respond to client feedback (due in 5 days).\n\n"
-                       "Please prioritize these tasks based on urgency and importance."
-        }
-    ],
-    temperature=0.6
-)
+# Get the API key from environment variables
+api_key = os.getenv("NEBIUS_API_KEY")
+if not api_key:
+    raise ValueError("API key not found.")
 
-# Print the result
-print(completion.to_json())
+# Set up OpenAI client
+client = OpenAI(base_url="https://api.studio.nebius.ai/v1/", api_key=api_key)
+
+# Create Flask app
+app = Flask(__name__)
+
+# Enable CORS for frontend URL (localhost:5173)
+CORS(app, origins=["http://localhost:5173"])
+
+# Define the route for prioritizing tasks
+@app.route('/prioritize', methods=['POST'])
+def prioritize():
+    try:
+        tasks = request.json['tasks']  # Get the tasks from the request
+        # Process the tasks (e.g., send to OpenAI model)
+        completion = client.chat.completions.create(
+            model="meta-llama/Meta-Llama-3.1-70B-Instruct",
+            messages=[{
+                "role": "user",
+                "content": f"Prioritize the following tasks:\n{tasks}"
+            }],
+            temperature=0.6
+        )
+        prioritized_tasks = completion.to_json()  # Get the result
+        return jsonify({"prioritized_tasks": prioritized_tasks})  # Send back response
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  # Handle error if any
+
+# Run the Flask app
+if __name__ == '__main__':
+    app.run(debug=True)  # Ensure the server is running
