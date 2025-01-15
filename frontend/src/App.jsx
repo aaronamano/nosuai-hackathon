@@ -13,7 +13,7 @@ function App() {
 
   const [newTask, setNewTask] = useState("");
   const [newDeadline, setNewDeadline] = useState("");
-  const [aiText, setAiText] = useState("Output of AI text");
+  const [aiText, setAiText] = useState("");
 
   // Saves tasks to local storage
   useEffect(() => {
@@ -85,7 +85,7 @@ function App() {
       <main className="flex-grow flex">
         {/* Displays the todo list */}
         <div className="w-1/2 p-6 overflow-auto">
-          <h1 className="text-2xl font-bold mb-4">Prioritize Higher</h1>
+          <h1 className="text-2xl font-bold mb-4">Prioritizer Higher</h1>
           <TodoList
             tasks={tasks}
             onDelete={deleteTask}
@@ -96,7 +96,7 @@ function App() {
 
         {/* Displays the AI's text output */}
         <div className="w-1/2 p-6 bg-gray-100">
-          <div className="p-4 bg-white border rounded-md"><PrioritizedList aiText={aiText} /></div>
+          <PrioritizedList aiText={aiText} />
         </div>
       </main>
 
