@@ -35,7 +35,7 @@ def prioritize():
             }],
             temperature=0.6
         )
-        prioritized_tasks = completion.to_json()  # Get the result
+        prioritized_tasks =  completion.choices[0].message.content  # Get the result
         return jsonify({"prioritized_tasks": prioritized_tasks})  # Send back response
     except Exception as e:
         return jsonify({"error": str(e)}), 500  # Handle error if any
