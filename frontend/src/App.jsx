@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import TodoList from "./components/TodoList";
+import PrioritizedList from "./components/PrioritizedList";
+
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -95,7 +97,7 @@ function App() {
         {/* Displays the AI's text output */}
         <div className="w-1/2 p-6 bg-gray-100">
           <h2 className="text-xl font-semibold mb-4">AI Response</h2>
-          <div className="p-4 bg-white border rounded-md">{aiText}</div>
+          <div className="p-4 bg-white border rounded-md"><PrioritizedList aiText={aiText} /></div>
         </div>
       </main>
 
