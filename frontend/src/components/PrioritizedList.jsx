@@ -8,7 +8,7 @@ const PrioritizedList = ({ aiText }) => {
             {tasks.map((task, index) => {
                 const [ title, deadline ] = task.split('(Deadline:');
                 return (
-                    <li key={index} className="my-2">
+                    <li key={index} className="my-3">
                         <h3 className="font-semibold text-lg">{title.trim()}</h3>
                         {deadline && (
                             <p className="text-gray-600 mt-1">

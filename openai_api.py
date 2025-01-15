@@ -32,6 +32,9 @@ def prioritize():
             messages=[{
                 "role": "user",
                 "content": f"Prioritize the following tasks:\n{tasks}"
+                            "consider difficulty as a factor"
+                            "consider duration as a factor"
+                    
             }],
             temperature=0.6
         )
