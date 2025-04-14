@@ -14,6 +14,7 @@ function App() {
   const [newTask, setNewTask] = useState("");
   const [newDeadline, setNewDeadline] = useState("");
   const [aiText, setAiText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Saves tasks to local storage
   useEffect(() => {
@@ -41,6 +42,7 @@ function App() {
   };
 
   const prioritizeTask = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch("http://127.0.0.1:5000/prioritize", {
         method: "POST",
@@ -61,6 +63,8 @@ function App() {
     } catch (error) {
       console.error("Error:", error);
       setAiText("An error occurred while prioritizing tasks.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -96,7 +100,7 @@ function App() {
 
         {/* Displays the AI's text output */}
         <div className="w-1/2 p-6 bg-gray-100">
-          <PrioritizedList aiText={aiText} />
+          <PrioritizedList aiText={aiText} isLoading={isLoading}/>
         </div>
       </main>
 
@@ -129,7 +133,10 @@ function App() {
 
           {/* Prioritize Button */}
           <button
-            onClick={prioritizeTask}
+            onClick={() => {
+              setIsLoading(true);
+              prioritizeTask();
+            }}
             className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           >
             Prioritize
