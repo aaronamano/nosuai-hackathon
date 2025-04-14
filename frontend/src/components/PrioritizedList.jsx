@@ -1,7 +1,7 @@
 const PrioritizedList = ({ aiText, isLoading }) => {
     if (isLoading) {
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center min-h-screen">
             <svg
               className="animate-spin h-5 w-5 text-gray-800"
               xmlns="http://www.w3.org/2000/svg"
